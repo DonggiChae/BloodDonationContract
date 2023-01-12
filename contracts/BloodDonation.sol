@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "../node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "../node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "../node_modules/@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
 
 contract BloodDonation is ERC721Enumerable,AccessControl{
     bytes32 public constant HOSPITAL = keccak256("HOSPITAL");
@@ -75,6 +76,10 @@ contract BloodDonation is ERC721Enumerable,AccessControl{
         usedPhotoURI = _newUsedURI;
     }
 
+    function tokenURI(uint tokenId) public view override returns (string memory) {
+        require(_exists(tokenId), "Nonexistent token");
+        return _BDList[tokenId].photo;
+    }
     //헌혈증 사용
     function use(uint256 _tokenId) public onlyRole(HOSPITAL) {
         require(msg.sender == _BDList[_tokenId].ownerHistory[_BDList[_tokenId].ownerHistory.length-1], "You have to owned a token!");
@@ -216,4 +221,6 @@ contract BloodDonation is ERC721Enumerable,AccessControl{
             _BDList[tokenId].timestamp
             );
     }
+
+
 }
