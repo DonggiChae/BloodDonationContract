@@ -5,7 +5,7 @@ const path = require("path");
 
 async function main() {
   const Lock = await ethers.getContractFactory("BloodDonation");
-  const lock = await Lock.deploy("BloodDonation", "BDNFT");
+  const lock = await Lock.deploy();
 
   await lock.deployed();
 
